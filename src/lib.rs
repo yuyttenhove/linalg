@@ -1,8 +1,11 @@
+mod vector;
+mod traits;
+
 #[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
+mod tests;
+mod matrix;
+
+pub mod prelude {
+    pub use super::traits::{Dot, Cross, Norm};
+    pub use super::vector::{Vec2, Vec3};
 }

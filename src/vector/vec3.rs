@@ -1,10 +1,10 @@
 use std::fmt::Debug;
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, Neg, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, Neg, Not, Sub};
 use crate::traits::{Cross, Dot, Invert, Norm, PieceWiseDiv, PieceWiseMul, Sqrt};
 
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Vec3<T> {
-    values: [T; 3]
+    pub(crate) values: [T; 3]
 }
 
 impl<T: Copy> Vec3<T> {
@@ -22,6 +22,36 @@ impl<T: Copy> Vec3<T> {
 
     pub fn z(&self) -> T {
         self[2]
+    }
+}
+
+impl<T: PartialOrd + Copy> Vec3<T> {
+    pub fn all_smaller(&self, other: &Vec3<T>) -> bool {
+        self.values[0] < other.values[0] && self.values[1] < other.values[1] && self.values[2] < other.values[2]
+    }
+
+    pub fn all_smaller_eq(&self, other: &Vec3<T>) -> bool {
+        self.values[0] <= other.values[0] && self.values[1] <= other.values[1] && self.values[2] <= other.values[2]
+    }
+
+    pub fn min(&self) -> T {
+        if self.values[0] < self.values[1] && self.values[0] < self.values[2] {
+            self.values[0]
+        } else if self.values[1] < self.values[0] && self.values[1] < self.values[2] {
+            self.values[1]
+        } else {
+            self.values[2]
+        }
+    }
+
+    pub fn max(&self) -> T {
+        if self.values[0] > self.values[1] && self.values[0] > self.values[2] {
+            self.values[0]
+        } else if self.values[1] > self.values[0] && self.values[1] > self.values[2] {
+            self.values[1]
+        } else {
+            self.values[2]
+        }
     }
 }
 
@@ -48,7 +78,7 @@ impl<T> IndexMut<usize> for Vec3<T> {
 impl<T> Vec3<T>
     where T: Mul<T, Output=T> + Add<T, Output=T> + Copy {
     pub fn piece_wise_mul(&self, rhs: &Self) -> Self {
-        Vec3::new(self.x() * rhs.x(), self.y() + rhs.y(), self.z() + rhs.z())
+        Vec3::new(self.x() * rhs.x(), self.y() * rhs.y(), self.z() * rhs.z())
     }
 }
 
@@ -178,5 +208,13 @@ impl<T> Invert for Vec3<T> where T: Neg<Output=T> + Copy {
         self[0] = -self.x();
         self[1] = -self.y();
         self[2] = -self.z();
+    }
+}
+
+impl<T> Not for Vec3<T> where T: Not<Output=T> + Copy {
+    type Output = Vec3<T>;
+
+    fn not(self) -> Self::Output {
+        Vec3::new(!self.x(), !self.y(), !self.z())
     }
 }

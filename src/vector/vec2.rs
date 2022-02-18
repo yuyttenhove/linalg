@@ -1,5 +1,5 @@
 use std::fmt::Debug;
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, Neg, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, Neg, Not, Sub};
 use crate::traits::{Dot, Cross, Norm, Sqrt, PieceWiseMul, PieceWiseDiv, Invert};
 
 #[derive(Debug, Default, Copy, Clone)]
@@ -19,6 +19,16 @@ impl<T: Copy> Vec2<T> {
 
     pub fn y(&self) -> T {
         self.y
+    }
+}
+
+impl<T: PartialOrd> Vec2<T> {
+    pub fn all_smaller(&self, other: &Vec2<T>) -> bool {
+        self.x < other.x && self.y < other.y
+    }
+
+    pub fn all_smaller_eq(&self, other: &Vec2<T>) -> bool {
+        self.x <= other.x && self.y <= other.y
     }
 }
 
@@ -133,5 +143,19 @@ impl<T> Invert for Vec2<T> where T: Neg<Output=T> + Copy {
     fn invert(&mut self) {
         self.x = -self.x;
         self.y = -self.y;
+    }
+}
+
+impl<T> Not for Vec2<T> where T: Not<Output=T> + Copy {
+    type Output = Vec2<T>;
+
+    fn not(self) -> Self::Output {
+        Vec2::new(!self.x(), !self.y())
+    }
+}
+
+impl<T> From<[T; 2]> for Vec2<T> where T: Copy {
+    fn from(arr: [T; 2]) -> Self {
+        Vec2::new(arr[0], arr[1])
     }
 }

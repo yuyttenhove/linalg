@@ -1,5 +1,4 @@
 use std::ops::{Add, Index, Mul};
-use std::process::Output;
 use crate::traits::Dot;
 use crate::vector::Vec3;
 
@@ -11,6 +10,10 @@ pub struct Mat3x3<T> {
 impl<T: Copy> Mat3x3<T> {
     pub fn new(values: [[T; 3]; 3]) -> Self {
         Mat3x3 { values }
+    }
+
+    pub fn from_rows(row0: Vec3<T>, row1: Vec3<T>, row2: Vec3<T>) -> Mat3x3<T> {
+        Mat3x3 { values: [ row0.values, row1.values, row2.values ]}
     }
 
     pub fn row(&self, index: usize) -> Vec3<T> {

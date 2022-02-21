@@ -35,9 +35,9 @@ impl<T: PartialOrd + Copy> Vec3<T> {
     }
 
     pub fn min(&self) -> T {
-        if self.values[0] < self.values[1] && self.values[0] < self.values[2] {
+        if self.values[0] <= self.values[1] && self.values[0] <= self.values[2] {
             self.values[0]
-        } else if self.values[1] < self.values[0] && self.values[1] < self.values[2] {
+        } else if self.values[1] <= self.values[0] && self.values[1] <= self.values[2] {
             self.values[1]
         } else {
             self.values[2]
@@ -45,13 +45,27 @@ impl<T: PartialOrd + Copy> Vec3<T> {
     }
 
     pub fn max(&self) -> T {
-        if self.values[0] > self.values[1] && self.values[0] > self.values[2] {
+        if self.values[0] >= self.values[1] && self.values[0] >= self.values[2] {
             self.values[0]
-        } else if self.values[1] > self.values[0] && self.values[1] > self.values[2] {
+        } else if self.values[1] >= self.values[0] && self.values[1] >= self.values[2] {
             self.values[1]
         } else {
             self.values[2]
         }
+    }
+
+    pub fn element_wise_min(&self, other: &Self) -> Self {
+        let x = if self.values[0] < other.values[0] { self.values[0] } else { other.values[0] };
+        let y = if self.values[1] < other.values[1] { self.values[1] } else { other.values[1] };
+        let z = if self.values[2] < other.values[2] { self.values[2] } else { other.values[2] };
+        Vec3::new(x, y, z)
+    }
+
+    pub fn element_wise_max(&self, other: &Self) -> Self {
+        let x = if self.values[0] >= other.values[0] { self.values[0] } else { other.values[0] };
+        let y = if self.values[1] >= other.values[1] { self.values[1] } else { other.values[1] };
+        let z = if self.values[2] >= other.values[2] { self.values[2] } else { other.values[2] };
+        Vec3::new(x, y, z)
     }
 }
 

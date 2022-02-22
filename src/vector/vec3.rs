@@ -213,6 +213,14 @@ impl<T> PieceWiseDiv for Vec3<T> where T: Div<Output=T> + Copy {
     }
 }
 
+impl<T> Neg for Vec3<T> where T: Neg<Output=T> + Copy {
+    type Output = Vec3<T>;
+
+    fn neg(self) -> Self::Output {
+        Vec3::new(-self.x(), -self.y(), -self.z())
+    }
+}
+
 impl<T> Invert for Vec3<T> where T: Neg<Output=T> + Copy {
     fn inverted(&self) -> Self {
         Vec3::new(-self.x(), -self.y(), -self.z())
